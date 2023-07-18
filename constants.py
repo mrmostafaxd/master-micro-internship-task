@@ -1,7 +1,7 @@
 APP_ICON_LOCATION = "assets/program-icon.png"
 APP_ICON_SIZE = 48
-APP_MIN_WIDTH = 1100
-APP_MIN_HEIGHT = 550
+APP_MIN_WIDTH = 1100  # old 1284
+APP_MIN_HEIGHT = 550  # old 846
 
 APP_NORMAL_FONT_SIZE = 12
 APP_ERROR_FONT_SIZE = 10
@@ -19,4 +19,3 @@ MIN_MAX_ERROR = "Error: The min value must be less than the max value"
 
 FUNC_VALUE_EMPTY_ERROR = "Error: The function is empty"
 FUNC_VALUE_INCORRECT_ERROR = "Error: The function is incorrect"
-

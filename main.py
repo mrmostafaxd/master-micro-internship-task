@@ -1,7 +1,7 @@
 import sys
 from PySide2.QtCore import QSize
 from PySide2.QtGui import QIcon, QPixmap
-from PySide2.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout
+from PySide2.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout
 from custom_widgets import CustomCanvas, CustomLabel, CustomLineEdit, CustomPushButton
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 import numpy as np
@@ -16,7 +16,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Function Plotter")
-        self.setMinimumSize(QSize(cons.APP_MIN_WIDTH, cons.APP_MIN_HEIGHT))
+        # self.setMinimumSize(QSize(cons.APP_MIN_WIDTH, cons.APP_MIN_HEIGHT))
 
         self.set_icon(cons.APP_ICON_LOCATION, cons.APP_ICON_SIZE)
 
@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
             "Function f(x):", cons.APP_NORMAL_FONT_SIZE)
         self.function_input = CustomLineEdit(cons.APP_NORMAL_FONT_SIZE)
         self.func_error_label = CustomLabel(
-            "", cons.APP_ERROR_FONT_SIZE, cons.APP_ERROR_FONT_COLOR)
+            "", cons.APP_ERROR_FONT_SIZE, cons.APP_ERROR_FONT_COLOR, True)
 
         # for minimum x value
         min_val_label = CustomLabel(
@@ -34,7 +34,7 @@ class MainWindow(QMainWindow):
         self.min_val_input = CustomLineEdit(
             font_size=cons.APP_NORMAL_FONT_SIZE, float_only=True)
         self.min_error_label = CustomLabel(
-            "", cons.APP_ERROR_FONT_SIZE, cons.APP_ERROR_FONT_COLOR)
+            "", cons.APP_ERROR_FONT_SIZE, cons.APP_ERROR_FONT_COLOR, True)
 
         # for maximum x value
         max_val_label = CustomLabel(
@@ -42,11 +42,11 @@ class MainWindow(QMainWindow):
         self.max_val_input = CustomLineEdit(
             font_size=cons.APP_NORMAL_FONT_SIZE, float_only=True)
         self.max_error_label = CustomLabel(
-            "", cons.APP_ERROR_FONT_SIZE, cons.APP_ERROR_FONT_COLOR)
+            "", cons.APP_ERROR_FONT_SIZE, cons.APP_ERROR_FONT_COLOR, True)
 
         # for plot button
         self.plot_button = CustomPushButton(
-            "Plot", cons.APP_NORMAL_FONT_SIZE+4)
+            "Plot", cons.APP_NORMAL_FONT_SIZE+4, padding_vertical=20)
         self.plot_button.clicked.connect(self.plot)
 
         # for the Matplotlib Canvas
@@ -78,6 +78,11 @@ class MainWindow(QMainWindow):
         layout_left.addWidget(max_val_label)
         layout_left.addWidget(self.max_val_input)
         layout_left.addWidget(self.max_error_label)
+
+        # To add space between the PLOT button and the rest of the widgets
+        layout_left.addWidget(CustomLabel("", cons.APP_ERROR_FONT_SIZE,
+                                          cons.APP_ERROR_FONT_COLOR))
+
         layout_left.addWidget(self.plot_button)
 
         # to prevent the widgets from moving away from one another horizontally
@@ -88,7 +93,7 @@ class MainWindow(QMainWindow):
         layout_right.addWidget(self.toolbar)
 
         left_widget.setLayout(layout_left)
-        # give enough breathing room for the controls
+        # give enough breathing room for the user widgets layout
         left_widget.setMinimumWidth(450)
 
         right_widget.setLayout(layout_right)
@@ -96,7 +101,8 @@ class MainWindow(QMainWindow):
         layout_main.addWidget(left_widget)
         layout_main.addWidget(right_widget)
 
-        # make window scaling affects the graph more than the controls
+        # make window scaling affects the graph Canvas
+        #  more than the user widgets layout
         layout_main.setStretch(0, 1)
         layout_main.setStretch(1, 3)
 
@@ -153,13 +159,15 @@ class MainWindow(QMainWindow):
 
     def validate_function(self):
         """
-        Validates the function input and the minimum and maximum x values before plotting the function.
+        Validates the function input and the minimum and maximum x values
+        before plotting the function.
 
         Returns
         -------
-        A tuple containing an array of x values between the minimum and maximum x values, 
-        the evaluated function string if the validation is successful, and the evaluated function 
-        as a string to be a title in the graph , or None otherwise.
+        A tuple containing an array of x values between the minimum and
+        maximum x values, the evaluated function string if the validation
+        is successful, and the evaluated function as a string to be a title in
+        the graph , or None otherwise.
         """
 
         self.reset_errors()
@@ -241,11 +249,25 @@ class MainWindow(QMainWindow):
 
     def reset_errors(self):
         """
-        Reset the labels signifying the different error resulting from user input
+        Reset the labels signifying the different error resulting
+        from user input
         """
         self.func_error_label.setText("")
         self.min_error_label.setText("")
         self.max_error_label.setText("")
+
+    def resizeEvent(self, event):
+        """
+        Allows the resize event handler to automatically adjust the plot
+        to stay inside the figure area while resizing.
+
+        Parameters
+        ----------
+        event : QResizeEvent
+            The resize event triggered by MainWindow()
+        """
+        super().resizeEvent(event)
+        self.canvas.fig.tight_layout()
 
 
 if __name__ == "__main__":

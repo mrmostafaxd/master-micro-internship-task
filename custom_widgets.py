@@ -1,5 +1,5 @@
-from PySide2.QtWidgets import QLabel, QLineEdit, QPushButton, QWidget
-from PySide2.QtCore import QRegExp
+from PySide2.QtCore import QRegExp, Qt
+from PySide2.QtWidgets import QLabel, QLineEdit, QPushButton
 from PySide2.QtGui import QFont, QDoubleValidator, QRegExpValidator
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar
@@ -34,7 +34,9 @@ class CustomCanvas(FigureCanvas):
         self.default_config()
 
     def replot_function(self, x, y, function_str):
-        """Clear the current plot and re-plot the function with the given x and y values.
+        """
+        Clear the current plot and re-plot the function with
+        the given x and y values
 
         Parameters:
         ----------
@@ -83,7 +85,7 @@ class CustomLabel(QLabel):
     A custom label widget with font size and color options.
     """
 
-    def __init__(self, text, font_size=None, font_color=None):
+    def __init__(self, text, font_size=None, font_color=None, word_wrap=False):
         """
         Initializes the CustomLabel object.
 
@@ -95,6 +97,8 @@ class CustomLabel(QLabel):
             The size of the font used for the label
         font_color : str 
             The color of the font used for the label
+        word_wrap : bool
+            Indicates whether the label should wrap text to multiple lines
         """
 
         super().__init__(text)
@@ -104,6 +108,10 @@ class CustomLabel(QLabel):
 
         if font_color:
             self.set_font_color(font_color)
+
+        if word_wrap:
+            self.setWordWrap(True)
+            self.setFixedHeight(self.sizeHint().height() * 2)
 
     def set_font_size(self, font_size):
         """
@@ -132,10 +140,10 @@ class CustomLabel(QLabel):
 
 class CustomPushButton(QPushButton):
     """
-    A custom push button widget with font size option.
+    A custom push button widget with font and padding options.
     """
 
-    def __init__(self, text, font_size=None):
+    def __init__(self, text, font_size=None, padding_vertical=None, bold_value=True):
         """
         Initializes the CustomPushButton object.
 
@@ -145,13 +153,30 @@ class CustomPushButton(QPushButton):
             The text to display on the button
         font_size : int
             The size of the font used for the button
+        padding_vertical : int
+            The vertical padding value for the button
+        bold_value : bool
+            Indicates whether the button text should be bold
         """
         super().__init__(text)
+        self.padding_vertical = None
 
-        if font_size:
-            self.set_font_size(font_size)
+        if font_size is not None:
+            self.set_font_properties(font_size)
 
-    def set_font_size(self, font_size):
+        self.set_bold(bold_value)
+
+        if padding_vertical is not None:
+            self.padding_vertical = padding_vertical
+            self.setStyleSheet(
+                f"padding-top: {padding_vertical}; padding-bottom: {padding_vertical}")
+
+            # fix focus rectangle not expanding to contain the padding
+            # solution found here:
+            # https://stackoverflow.com/questions/11734431/qpushbutton-visual-issue
+            self.setFocusPolicy(Qt.NoFocus)
+
+    def set_font_properties(self, font_size):
         """
         Sets the font size of the button.
 
@@ -162,6 +187,19 @@ class CustomPushButton(QPushButton):
         """
         font: QFont = self.font()
         font.setPointSize(font_size)
+        self.setFont(font)
+
+    def set_bold(self, bold_value=False):
+        """
+        Sets the bold value of the button text.
+
+        Parameters
+        ----------
+        bold_value : bool
+            Indicates whether the button text should be bold
+        """
+        font: QFont = self.font()
+        font.setBold(bold_value)
         self.setFont(font)
 
 
@@ -179,7 +217,8 @@ class CustomLineEdit(QLineEdit):
         font_size : int
             The size of the font used for the line edit
         float_only: bool
-            A boolean value indicating whether to limit the input type to floats only
+            A boolean value indicating whether to limit the input type
+            to floats only
         """
         super().__init__()
 
