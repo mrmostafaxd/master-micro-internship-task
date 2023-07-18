@@ -7,7 +7,8 @@
 -   [Prerequisites](#prerequisites)
 -   [Usage](#usage)
 -   [Testing](#testing)
--   [Screenshots](#screenshots)
+    -   [Prerequisites and Running the Test Suite](#prerequisites-and-running-the-test-suite)
+    -   [Test Suite Coverage](#test-suite-coverage)
 -   [Screenshots](#screenshots)
     -   [Working Example](#working-example)
     -   [All fields are Empty](#all-fields-are-empty)
@@ -34,7 +35,7 @@ Function Plotter is a GUI tool developed using Python and Qt5 framework (PySide2
 
 Before running Function Plotter, make sure you have the following prerequisites installed:
 
--   [VS Code](https://code.visualstudio.com/download)
+-   [Visual Studio Code](https://code.visualstudio.com/download)
 -   Python 3.8+
 -   [Numpy](https://pypi.org/project/numpy/)
 -   [Matplotlib](https://pypi.org/project/matplotlib/)
@@ -62,12 +63,14 @@ python main.py
 
 ## Testing
 
+### Prerequisites and Running the Test Suite
+
 Before running the test suite for Function plotter, make sure that you have the following packages installed:
 
 -   [pytest](https://pypi.org/project/pytest/)
 -   [pytest-qt](https://pypi.org/project/pytest-qt/)
 
-Then run the following command inside Visual Studio Code terminal:
+Then apen the project inside Visual Studio Code and run the following command inside the terminal:
 
 ```
 pytest
@@ -75,7 +78,21 @@ pytest
 
 [(Return to top)](#master-micro-internship-task)
 
+### Test Suite Coverage
+
+The test suite cover the following:
+
+-   **Empty Input Tests:** Verify error messages are displayed and no graph is plotted when no input is provided.
+-   **Valid Input Tests:** Ensure correct graph is drawn, title matches function input, and toolbar icons are enabled with valid input.
+-   **Function Input Tests:** alidate error messages and absence of graph for invalid/empty function input field.
+-   **Minimum and Maximum X Input Tests:** Validate error messages and absence of graph for invalid/empty input in X value fields.
+-   **Invalid Minimum and Maximum X Range Test:** Verify error message, no graph, and disabled toolbar icons when min >= max.
+
+[(Return to top)](#master-micro-internship-task)
+
 ## Screenshots
+
+Here are some screenshots illustrating different scenarios:
 
 ### Working example
 
