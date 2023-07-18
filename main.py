@@ -25,6 +25,7 @@ class MainWindow(QMainWindow):
         function_label = CustomLabel(
             "Function f(x):", cons.APP_NORMAL_FONT_SIZE)
         self.function_input = CustomLineEdit(cons.APP_NORMAL_FONT_SIZE)
+        self.function_input.returnPressed.connect(self.plot)
         self.func_error_label = CustomLabel(
             "", cons.APP_ERROR_FONT_SIZE, cons.APP_ERROR_FONT_COLOR, True)
 
@@ -33,6 +34,7 @@ class MainWindow(QMainWindow):
             "Minimum x value:", cons.APP_NORMAL_FONT_SIZE)
         self.min_val_input = CustomLineEdit(
             font_size=cons.APP_NORMAL_FONT_SIZE, float_only=True)
+        self.min_val_input.returnPressed.connect(self.plot)
         self.min_error_label = CustomLabel(
             "", cons.APP_ERROR_FONT_SIZE, cons.APP_ERROR_FONT_COLOR, True)
 
@@ -41,6 +43,7 @@ class MainWindow(QMainWindow):
             "Maximum x value:", cons.APP_NORMAL_FONT_SIZE)
         self.max_val_input = CustomLineEdit(
             font_size=cons.APP_NORMAL_FONT_SIZE, float_only=True)
+        self.max_val_input.returnPressed.connect(self.plot)
         self.max_error_label = CustomLabel(
             "", cons.APP_ERROR_FONT_SIZE, cons.APP_ERROR_FONT_COLOR, True)
 
